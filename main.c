@@ -32,8 +32,6 @@ int	main(int argc, char **argv)
 	t_node	*stack_a;
 	t_node	*stack_b;
 
-	stack_a = NULL;
-	stack_b = NULL;
 	if (argc == 1)
 	{
 		write(2, "Error\n", 6);
@@ -42,9 +40,7 @@ int	main(int argc, char **argv)
 	stack_a = init_stack(&stack_a, argv);
 	print_stack(&stack_a);
 	print_stack(&stack_b);
-
 	push_swap(&stack_a, &stack_b);
-
 	print_stack(&stack_a);
 	printf("\n");
 	print_stack(&stack_b);

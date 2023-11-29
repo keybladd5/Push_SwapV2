@@ -262,12 +262,43 @@ static	void	move_cheapest(t_node **a, t_node **b)
 	}
 	pa(a, b);
 }
+// casos posibles con 3 numeros =  | 3 1 2 |  2 1 3 |  3 2 1 | 1 3 2 correct | 2 3 1 correct 
+void	tiny_sort(t_node **stack)
+{
+	if ((*stack)->next->data > (*stack)->next->next->data) // 1 3 2 correct | 2 3 1 correct 
+	{
+		if (((*stack)->data > (*stack)->next->data &&
+		 (*stack)->data > (*stack)->next->next->data))//3 1 2
+		 {
+			sa(stack);
+			rra(stack);
+		}
+		else if ((*stack)->next->data > (*stack)->data 
+		&& (*stack)->next->next->data > (*stack)->data)
+		{
+			sa(stack);
+			ra(stack);
+		}
+		else
+			rra(stack);
+	}
+	else if ((*stack)->next->data < (*stack)->next->next->data) //| 3 > 1 < 2 |  2 1 3
+	{
+		if ((*stack)->data < (*stack)->next->next->data &&
+		(*stack)->next->data < (*stack)->data)
+			sa(stack);
+		else
+			ra(stack);
+	}
+}
 
 void	push_swap(t_node **a, t_node **b)
 {
 	int size_a;
 
 	size_a = ft_lstsize(*a);
+	if (size_a == 3)
+		return (tiny_sort(a));
 	while (size_a-- > 2)
 		pb(a, b);
 	print_stack(a);
