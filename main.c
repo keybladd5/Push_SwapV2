@@ -6,7 +6,7 @@
 /*   By: ade-tole <ade-tole@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 19:29:16 by ade-tole          #+#    #+#             */
-/*   Updated: 2023/11/26 23:25:19 by ade-tole         ###   ########.fr       */
+/*   Updated: 2023/11/28 15:26:09 by ade-tole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	main(int argc, char **argv)
 	push_swap(&stack_a, &stack_b);
 
 	print_stack(&stack_a);
+	printf("\n");
+	print_stack(&stack_b);
 
 	return (0);
 }	

@@ -6,28 +6,11 @@
 /*   By: ade-tole <ade-tole@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 14:06:05 by ade-tole          #+#    #+#             */
-/*   Updated: 2023/11/26 23:29:08 by ade-tole         ###   ########.fr       */
+/*   Updated: 2023/11/28 15:25:26 by ade-tole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-//Return the dir about min data node on stack to set the target
-static t_node	*list_lstsmallest(t_node *stack)
-{
-	int i;
-	t_node *tmp;
-
-	tmp = stack;
-
-	while (stack)
-	{
-		if (stack->data > tmp->data)
-			tmp = stack;
-		stack = stack->next;
-	}
-	return (tmp);
-}
 
 static	void	set_index(t_node *stack)
 {
@@ -47,105 +30,256 @@ static	void	set_index(t_node *stack)
 		stack = stack->next;
 	}
 }
-//de cada nodo en b busca el siguiente mas grande en a, si no lo encuentra busca el mas pequeño en a
+
 static	void	set_target(t_node *a, t_node *b)
 {
-	t_node	*tmp_b;
+	t_node	*tmp_a;
 	t_node	*target;
-	int		target_value;//Almacena el valor del nodo mas grande
+	int		target_value;
 
-	while (a)
+	while (b)
 	{
-		target_value = INT_MAX;// para asegurarme que se ael siguiente mas grande y no saltar nodos
-		tmp_b = b;
-		while (tmp_b)
+		target_value = INT_MAX; //esta variable nos ayuda a ver el siguiente mas grande mas pequeño posible 
+		tmp_a = a;
+		while (tmp_a)
 		{
-			if ((tmp_b->data > b->data) && (tmp_b->data < target_value))// mas grande y menor que el tope del registro de todo el stack a
+			if (b->data < tmp_a->data && tmp_a->data < target_value)
 			{
-				target_value = tmp_b->data; //96 
-				target = tmp_b; //nodo objetivo es 96
+				target_value = tmp_a->data;
+				target = tmp_a;
 			}
-			tmp_b = tmp_b->next;
+			tmp_a = tmp_a->next;
 		}
-		if (target_value == INT_MAX) //no
-			b->target = ft_lstsmallest(b); //
+		if (target_value == INT_MAX)
+			b->target = ft_lstsmallest(a); //missing ft
 		else
-			a->target = target; //
-		a = a->next;
+			b->target = target;
+		b = b->next;
 	}
 }
-void	comp_price(t_node *a, t_node *b, int size_a, int size_b)
+
+static	void	comp_price(t_node *b, int size_a, int size_b)
 {
 	int	r_price;
 	int rr_price;
 
-	if (a->index > a->target->index)
-		r_price = a->index;
+	if (b->index > b->target->index)
+		r_price = b->index;
 	else
-		r_price = a->target->index;
-	if ((size_a - a->index) > (size_b - a->target->index))
-		rr_price = size_a - a->index;
+		r_price = b->target->index;
+	if ((size_b - b->index) > (size_a - b->target->index))
+		rr_price = size_b - b->index;
 	else
-		rr_price = size_b - a->target->index;
+		rr_price = size_a - b->target->index;
 	if (r_price < rr_price)
-		a->push_price = r_price;
+		b->push_price = r_price;
 	else
-		a->push_price = rr_price;
+		b->push_price = rr_price;
 }
-void	set_price(t_node *a, t_node *b)
+
+static	void	set_price(t_node *a, t_node *b)
 {
 	int	size_a;
 	int	size_b;
 
 	size_a = ft_lstsize(a);
 	size_b = ft_lstsize(b);
-	while (a)
+	while (b)
 	{
-		if (a->upper_half && a->target->upper_half)// los dos upper
+		if (b->upper_half && b->target->upper_half)
 		{
-			if (a->index > a->target->index)//nos quedamos con el mayor ya que permite hacer rr both
-				a->push_price = a->index;
+			if (b->index > b->target->index)
+				b->push_price = b->index;
 			else
-				a->push_price = a->target->index;
+				b->push_price = b->target->index;
 		}
-		else if (!a->upper_half && !a->target->upper_half)
+		else if (!b->upper_half && !b->target->upper_half)
 		{
-			if ((size_a - a->index) > (size_b - a->target->index))
-				a->push_price = size_a - a->index;
+			if ((size_b - b->index) > (size_a - b->target->index))
+				b->push_price = size_b - b->index;
 			else
-				a->push_price = size_b - a->target->index;
+				b->push_price = size_a - b->target->index;
 		}
 		else
-			comp_price(a, b, size_a, size_b);
-		a = a->next;
+			comp_price(b, size_a, size_b);
+		b = b->next;
 	}
 }
-void	set_cheapest(t_node *stack)
+
+static	void	move_cheapest(t_node **a, t_node **b)
 {
-	int	push_price_min;
-	t_node *cheapest_node;
+	t_node	*cheapest;
+	t_node	*tmp_b;
+	int		size_a;
+	int		size_b;
+	int		r_price;
+	int		rr_price;
 
-	push_price_min = INT_MAX;
-	while (stack)
+	cheapest = *b;
+	tmp_b = *b;
+	size_a = ft_lstsize(*a);
+	size_b = ft_lstsize(*b);
+	while (tmp_b)
 	{
-		if (stack->push_price < push_price_min)
-			push_price_min = stack->push_price;
-		stack = stack->next;
-		cheapest_node = stack;	
+		if (tmp_b->push_price < cheapest->push_price)
+			cheapest = tmp_b;
+		tmp_b = tmp_b->next;
 	}
-	cheapest_node->cheapest = true;
+	if (cheapest->upper_half && cheapest->target->upper_half)// los dos upper half, rotate
+	{
+		if (cheapest->index > cheapest->target->index)  //stack b 2 > stack a 1  >> 1 > 0  >>  0 >> 0 
+ 		{
+			while (cheapest->target->index)
+			{
+				rr(a, b);
+				cheapest->target->index--;
+				cheapest->index--;
+			}
+			while (cheapest->index)
+			{
+				rb(b);
+				cheapest->index--;
+			}
+		}
+		else //stack b 1 > stack a 2  >> 0 > 1  >>  0 >> 0 
+		{
+			while (cheapest->index)
+			{
+				rr(a, b);
+				cheapest->index--;
+				cheapest->target->index--;
+			}
+			while (cheapest->target->index)
+			{
+				ra(a);
+				cheapest->target->index--;
+			}
+		}
+	}
+	else if (!cheapest->upper_half && !cheapest->target->upper_half) // los dos esta abajop
+	{
+		if ((size_b - cheapest->index) > (size_a - cheapest->target->index)) //el resultado de cada resta te dice cual esta mas arriba 
+		{
+			while ((size_a - cheapest->target->index)) //iteramos inex para que el resultado de la resta de 0 y asi salir del bucle. Aqui target necesita menos movimientos
+			{
+				rrr(a, b);
+				cheapest->target->index++;
+				cheapest->index++;
+			}
+			while ((size_b - cheapest->index)) // queda pendiente las rotasciones de stack b pero el nodo de a ya esta en el top
+			{
+				rrb(b); //por eso rotamos aqui solo el del stack b
+				cheapest->index++;
+			}
+		}
+		else //caso contrario a toda la logica anterior
+		{
+			while ((size_b - cheapest->index) && cheapest->index) 
+			{
+				rrr(a, b);
+				cheapest->index++;
+				cheapest->target->index++;
+			}
+			while ((size_a - cheapest->target->index))
+			{
+				rra(a);
+				cheapest->target->index++;
+			}
+		}
+	}
+	else //si cada uno esta en una mitad diferente 
+	{
+		if (cheapest->index > cheapest->target->index) //el rotate_price sera igual al index mas grande de los dos
+			r_price = cheapest->index;
+		else//el rotate_price sera igual al index mas grande de los dos
+			r_price = cheapest->target->index;
+		if ((size_b - cheapest->index) > (size_a - cheapest->target->index))//el reverse_rotate_price sera igual a la diferencia mas grande entre el size y el index
+			rr_price = size_b - cheapest->index;
+		else
+			rr_price = size_a - cheapest->target->index;
+		if (r_price < rr_price) //si es mas barato rotar, se ejecuta  toda la logica del primer if 
+		{
+			if (cheapest->index > cheapest->target->index)
+			{
+				while (cheapest->target->index)
+				{
+					rr(a, b);
+					cheapest->target->index--;
+					cheapest->index--;
+				}
+				while (cheapest->index)
+				{
+					rb(b);
+					cheapest->index--;
+				}
+			}
+			else 
+			{
+				while (cheapest->index)
+				{
+					rr(a, b);
+					cheapest->index--;
+					cheapest->target->index--;
+				}
+				while (cheapest->target->index)
+				{
+					ra(a);
+					cheapest->target->index--;
+				}
+			}
+		}
+		else //en caso contrario se utiliza la logica del else if
+		{
+			if ((size_b - cheapest->index) > (size_a - cheapest->target->index))
+			{
+				while ((size_a - cheapest->target->index))
+				{
+					rrr(a, b);
+					cheapest->target->index++;
+					cheapest->index++;
+				}
+				while ((size_b - cheapest->index))
+				{
+					rrb(b);
+					cheapest->index++;
+				}
+			}
+			else
+			{
+				while ((size_b - cheapest->index) && cheapest->index)
+				{
+					rrr(a, b);
+					cheapest->index++;
+					cheapest->target->index++;
+				}
+				while ((size_a - cheapest->target->index))
+				{
+					rra(a);
+					cheapest->target->index++;
+				}
+			}
+		}
+	}
+	pa(a, b);
 }
-
 
 void	push_swap(t_node **a, t_node **b)
 {
-	pb(a, b);
-	pb(a, b);
+	int size_a;
 
-	while (*a)
+	size_a = ft_lstsize(*a);
+	while (size_a-- > 2)
+		pb(a, b);
+	print_stack(a);
+	print_stack(b);
+	while (*b)
 	{
 		set_index(*a);
 		set_index(*b);
 		set_target(*a, *b);
+		set_price(*a, *b);
+		move_cheapest(a, b);
+		print_stack(a);
+		print_stack(b);
 	}
 }
