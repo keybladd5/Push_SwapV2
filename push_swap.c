@@ -299,8 +299,9 @@ void	push_swap(t_node **a, t_node **b)
 	size_a = ft_lstsize(*a);
 	if (size_a == 3)
 		return (tiny_sort(a));
-	while (size_a-- > 2)
+	while (size_a-- > 3)
 		pb(a, b);
+	tiny_sort(a);
 	//print_stack(a);
 	//print_stack(b);
 	while (*b)
@@ -313,6 +314,7 @@ void	push_swap(t_node **a, t_node **b)
 		//print_stack(a);
 		//print_stack(b);
 	}
+	print_stack(a);
 	set_index(*a);
 	if (ft_lstsmallest(*a)->upper_half)
 	{
@@ -339,16 +341,3 @@ int	check_is_sorted(t_node **stack_a)
 	}
 	return (1);
 }
-
-/*pb
-pb
-pb
-pb
-pb
-pb
-2 1 
-5 4 3 7 8 9 
-ra
-pa
-5 1 2 
-4 3 7 8 9 */
