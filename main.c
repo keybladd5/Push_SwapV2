@@ -42,8 +42,5 @@ int	main(int argc, char **argv)
 	print_stack(&stack_b);
 	push_swap(&stack_a, &stack_b);
 	print_stack(&stack_a);
-	printf("\n");
-	print_stack(&stack_b);
-
 	return (0);
 }	

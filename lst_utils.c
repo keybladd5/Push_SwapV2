@@ -30,13 +30,16 @@ int		ft_lstsize(t_node *stack)
 
 t_node	*ft_lstsmallest(t_node *stack)
 {
-	t_node	*smallest;
+	t_node 	*tmp;
+	t_node  *smallest;
 
-	while (stack)
+	tmp = stack;
+	smallest = tmp;
+	while (tmp->next)
 	{
-		if (stack->data < smallest->data)
-			smallest = stack;
-		stack = stack->next;
+		if (smallest->data > tmp->data) // 0 1 2
+			smallest = tmp;
+		tmp = tmp->next;
 	}	
 	return (smallest);
 }

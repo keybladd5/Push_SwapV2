@@ -301,8 +301,6 @@ void	push_swap(t_node **a, t_node **b)
 		return (tiny_sort(a));
 	while (size_a-- > 2)
 		pb(a, b);
-	print_stack(a);
-	print_stack(b);
 	while (*b)
 	{
 		set_index(*a);
@@ -313,4 +311,20 @@ void	push_swap(t_node **a, t_node **b)
 		print_stack(a);
 		print_stack(b);
 	}
+	/*while(*a != ft_lstsmallest(*a))
+		ra(a);*/
 }
+
+
+/*pb
+pb
+pb
+pb
+pb
+pb
+2 1 
+5 4 3 7 8 9 
+ra
+pa
+5 1 2 
+4 3 7 8 9 */
