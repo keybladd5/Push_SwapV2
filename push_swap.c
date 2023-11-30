@@ -301,6 +301,8 @@ void	push_swap(t_node **a, t_node **b)
 		return (tiny_sort(a));
 	while (size_a-- > 2)
 		pb(a, b);
+	//print_stack(a);
+	//print_stack(b);
 	while (*b)
 	{
 		set_index(*a);
@@ -308,13 +310,35 @@ void	push_swap(t_node **a, t_node **b)
 		set_target(*a, *b);
 		set_price(*a, *b);
 		move_cheapest(a, b);
-		print_stack(a);
-		print_stack(b);
+		//print_stack(a);
+		//print_stack(b);
 	}
-	/*while(*a != ft_lstsmallest(*a))
-		ra(a);*/
+	set_index(*a);
+	if (ft_lstsmallest(*a)->upper_half)
+	{
+		while(ft_lstsmallest(*a) != *a)
+			ra(a);
+	}
+	else
+	{
+		while(ft_lstsmallest(*a) != *a)
+			rra(a);
+	}
 }
 
+int	check_is_sorted(t_node **stack_a)
+{
+	int i;
+
+	while((*stack_a)->next)
+	{
+		i = (*stack_a)->data;
+		*stack_a = (*stack_a)->next;
+		if ((*stack_a)->data < i)
+			return (0);
+	}
+	return (1);
+}
 
 /*pb
 pb

@@ -38,9 +38,11 @@ int	main(int argc, char **argv)
 		exit (1);
 	}
 	stack_a = init_stack(&stack_a, argv);
-	print_stack(&stack_a);
-	print_stack(&stack_b);
+	//print_stack(&stack_a);
+	//print_stack(&stack_b);
 	push_swap(&stack_a, &stack_b);
-	print_stack(&stack_a);
+	//print_stack(&stack_a);
+	//if (check_is_sorted(&stack_a) == 1)
+		//printf("SORTED\n");
 	return (0);
 }	

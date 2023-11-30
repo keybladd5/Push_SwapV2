@@ -62,6 +62,8 @@ void	rrr(t_node **a, t_node **b);
 //retirar antes de entregar
 void	print_stack(t_node **head);
 
+int		check_is_sorted(t_node **stack_a);
+
 void	tiny_sort(t_node **stack);
 
 #endif
