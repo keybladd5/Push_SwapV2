@@ -6,20 +6,21 @@
 /*   By: ade-tole <ade-tole@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 19:32:58 by ade-tole          #+#    #+#             */
-/*   Updated: 2023/11/24 13:11:38 by ade-tole         ###   ########.fr       */
+/*   Updated: 2023/11/30 17:52:19 by ade-tole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static	void	swap(t_node **head) // 0 1 2 -> 1 0 2
+static	void	swap(t_node **head)
 {
-	*head = (*head)->next; // head=1
-	(*head)->prev->next = (*head)->next; // 0->next=2
-	(*head)->prev->prev = *head; // 0->prev=1
-	(*head)->next->prev = (*head)->prev; // 2->prev=0
-	(*head)->next = (*head)->prev; // 1->next=0
-	(*head)->prev = NULL; // 1 first
+	*head = (*head)->next;
+	(*head)->prev->next = (*head)->next;
+	(*head)->prev->prev = *head;
+	if ((*head)->next)
+		(*head)->next->prev = (*head)->prev;
+	(*head)->next = (*head)->prev;
+	(*head)->prev = NULL;
 }
 
 void	sa(t_node **a)
